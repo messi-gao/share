@@ -25,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private TOrderRepository orderRepository;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @Override
     public void deliver(int orderId) {
         TOrderDeliverEntity tOrderDeliverEntity = new TOrderDeliverEntity();
@@ -33,15 +33,16 @@ public class OrderServiceImpl implements OrderService {
         tOrderDeliverEntity.setDeliverStatus(1);
         orderRepository.save(tOrderDeliverEntity);
 
-        try {
-            OrderService orderService = (OrderService) AopContext.currentProxy();
-            orderService.sendMessage(tOrderDeliverEntity.getId());
-        } catch (Exception e) {
-            logger.error("dddddddddddddd");
-        }
+//        try {
+//            OrderService orderService = (OrderService) AopContext.currentProxy();
+//            orderService.
+//        } catch (Exception e) {
+//            logger.error("dddddddddddddd");
+//        }
+        sendMessage(tOrderDeliverEntity.getId());
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @Override
     public void sendMessage(int deliverId) {
         // 保存信息到本地数据库
